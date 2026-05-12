@@ -19,5 +19,9 @@
     };
     import-tree.url = "github:vic/import-tree";
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
+    treefmt = {
+      url = "github:numtide/treefmt-nix";
+      flake = false;
+    };
   };
 }

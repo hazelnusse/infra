@@ -4,7 +4,7 @@
     url = "github:mightyiam/files";
     flake = false;
   };
-  imports = [ (inputs.files + "/module.nix") ];
+  imports = [ (inputs.files + "/flake-module.nix") ];
 
   perSystem = psArgs: {
     packages.write-files = psArgs.config.files.writer.drv;

@@ -11,9 +11,9 @@
   };
 
   config.flake = {
-    nixosConfigurations = lib.flip lib.mapAttrs config.configurations.nixos (
-      name: { module }: lib.nixosSystem { modules = [ module ]; }
-    );
+    nixosConfigurations =
+      config.configurations.nixos
+      |> lib.mapAttrs (name: { module }: lib.nixosSystem { modules = [ module ]; });
 
     checks =
       config.flake.nixosConfigurations

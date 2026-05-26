@@ -1,15 +1,18 @@
 {
   config,
+  nixvim,
   ...
 }:
 {
   perSystem =
-    psArgs@{ inputs', pkgs, ... }:
+    psArgs@{ system, ... }:
     {
-      packages.nixvim = inputs'.nixvim.legacyPackages.makeNixvimWithModule {
-        inherit pkgs;
-        module = config.flake.modules.nixvim.base;
-      };
+      packages.nixvim =
+        nixvim.evalNixvim {
+          inherit system;
+          modules = [ config.flake.modules.nixvim.base ];
+        }
+        |> (evaluation: evaluation.config.build.package);
       checks.nixvim = psArgs.config.packages.nixvim;
     };
 }

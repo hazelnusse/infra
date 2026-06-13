@@ -14,7 +14,11 @@
       files.files = [
         {
           path = ".gitignore";
-          drv = config.gitignore |> lib.naturalSort |> lib.concatLines |> pkgs.writeText ".gitignore";
+          drv =
+            config.gitignore
+            |> lib.naturalSort
+            |> lib.concatLines
+            |> pkgs.writeText ".gitignore";
         }
       ];
 

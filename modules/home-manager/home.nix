@@ -55,7 +55,6 @@
         pinta
         ripgrep
         #telegram-desktop
-        tmux
         tree
         usbutils
         #unzip
@@ -156,6 +155,11 @@
 
       programs.starship.enable = true;
       programs.eza.enable = true;
+
+      programs.tmux = {
+        enable = true;
+        prefix = "C-a";
+      };
 
       # Let Home Manager install and manage itself.
       programs.home-manager.enable = true;

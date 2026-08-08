@@ -39,6 +39,8 @@
         #bitwarden-desktop
         #canon-cups-ufr2
         clang
+        claude-code
+        claude-monitor
         fd
         firefox
         git

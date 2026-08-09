@@ -8,20 +8,7 @@
     type = lib.types.listOf lib.types.str;
   };
 
-  config.perSystem =
-    { pkgs, ... }:
-    {
-      files.files = [
-        {
-          path = ".gitignore";
-          drv =
-            config.gitignore
-            |> lib.naturalSort
-            |> lib.concatLines
-            |> pkgs.writeText ".gitignore";
-        }
-      ];
-
-      #treefmt.settings.global.excludes = [ "*/.gitignore" ];
-    };
+  config.perSystem = {
+    files.file.".gitignore".text = config.gitignore |> lib.naturalSort |> lib.concatLines;
+  };
 }

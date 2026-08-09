@@ -10,7 +10,7 @@
     treefmt = {
       #projectRootFile = "flake.nix";
       programs = {
-        #prettier.enable = true;
+        prettier.enable = true;
         #shfmt.enable = true;
       };
       settings = {

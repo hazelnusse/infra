@@ -111,7 +111,7 @@
 
       home.shellAliases = {
         t = "tree";
-        v = "$(readlink -f ~/.config/nixCats-nvim/result/bin/nixCats)";
+        v = "nvim";
         update = "home-manager switch";
       };
 

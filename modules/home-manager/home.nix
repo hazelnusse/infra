@@ -96,4 +96,11 @@
       # Let Home Manager install and manage itself.
       programs.home-manager.enable = true;
     };
+  perSystem = {
+    nixpkgs.config.allowUnfreePackages = [
+      "canon-cups-ufr2"
+      "claude-code"
+      "google-chrome"
+    ];
+  };
 }

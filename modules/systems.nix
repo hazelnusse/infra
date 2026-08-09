@@ -1,6 +1,4 @@
 { config, lib, ... }:
 {
-  systems =
-    config.flake.nixosConfigurations
-    |> lib.mapAttrsToList (name: nixos: nixos.pkgs.stdenv.hostPlatform.system);
+  systems = config.configurations.nixos |> lib.mapAttrsToList (name: nixos: nixos.system);
 }

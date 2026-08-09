@@ -37,7 +37,12 @@
 
       none-ls = {
         enable = true;
-        sources.formatting.nix_flake_fmt.enable = true;
+        sources.formatting.nix_flake_fmt = {
+          enable = true;
+          # Defaults to every filetype otherwise, running `nix fmt` even in
+          # projects with no `formatter` flake output.
+          settings.filetypes = [ "nix" ];
+        };
       };
     };
 

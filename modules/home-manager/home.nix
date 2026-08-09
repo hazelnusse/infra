@@ -2,12 +2,6 @@
   flake.modules.homeManager.legacy =
     homeArgs@{ pkgs, ... }:
     {
-      # TODO: change this to avoid the following warning:
-      # evaluation warning: luke profile: You have set either `nixpkgs.config` or `nixpkgs.overlays` while using `home-manager.useGlobalPkgs`.
-      # This will soon not be possible. Please remove all `nixpkgs` options when using `home-manager.useGlobalPkgs`.
-      # Definitions found in `/nix/store/vfs99z7lswapf9lbj34qrygkdawirghk-source/modules/home-manager/home.nix, via option flake.modules.homeManager.legacy'.
-      nixpkgs.config.allowUnfree = true;
-
       dconf.settings = {
         "org/gnome/desktop/datetime" = {
           automatic-timezone = true;

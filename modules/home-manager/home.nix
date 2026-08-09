@@ -55,7 +55,7 @@
       home.shellAliases = {
         t = "tree";
         v = "nvim";
-        update = "home-manager switch";
+        update = "sudo nixos-rebuild switch --flake=$HOME/repos/infra";
       };
 
       # Enabling the shell is required to ensure home.shellAliases work

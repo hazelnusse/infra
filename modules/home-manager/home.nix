@@ -95,13 +95,9 @@
       #  /etc/profiles/per-user/luke/etc/profile.d/hm-session-vars.sh
       #
       home.sessionVariables = {
-        EDITOR = "$(readlink -f ~/.config/nixCats-nvim/result/bin/nixCats)";
+        EDITOR = "nvim";
         BROWSER = "firefox";
       };
-
-      home.sessionPath = [
-        "$HOME/.config/nixCats-nvim/result/bin"
-      ];
 
       home.shellAliases = {
         t = "tree";
@@ -111,12 +107,6 @@
 
       # Enabling the shell is required to ensure home.shellAliases work
       programs.bash.enable = true;
-
-      #programs.nixvim = {
-      #  enable = true;
-      #  colorschemes.catppuccin.enable = true;
-      #  #plugins.lualine.enable = true;
-      #};
 
       programs.git = {
         enable = true;

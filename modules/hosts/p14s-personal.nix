@@ -1,11 +1,7 @@
-{ config, lib, ... }:
+{ config, ... }:
 {
-  # TODO: rename configuration to match hostname and filename
   configurations.nixos.p14s-personal.module =
-    nixosArgs@{
-      pkgs,
-      ...
-    }:
+    nixosArgs@{ ... }:
     {
       imports = [
         config.flake.modules.nixos.base
@@ -14,7 +10,6 @@
         (nixosArgs.modulesPath + "/installer/scan/not-detected.nix")
       ];
 
-      # TODO: rename hostName and change the filename
       networking.hostName = "p14s-personal";
 
       # This value determines the NixOS release from which the default

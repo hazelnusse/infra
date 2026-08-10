@@ -50,6 +50,7 @@
       home.sessionVariables = {
         EDITOR = "nvim";
         BROWSER = "firefox";
+        COLORTERM = "truecolor";
       };
 
       home.shellAliases = {

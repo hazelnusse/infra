@@ -92,6 +92,8 @@
       programs.tmux = {
         enable = true;
         prefix = "C-a";
+        focusEvents = true;
+        mouse = true;
       };
 
       # Let Home Manager install and manage itself.

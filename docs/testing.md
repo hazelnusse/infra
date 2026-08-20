@@ -25,7 +25,7 @@ debug a failing test.
 - `vm-smoke-test` — boots a bare NixOS VM to `multi-user.target`. Exists to
   prove the test infrastructure itself (and KVM acceleration) works, not to
   test any of this repo's modules.
-- `base-efi-pc-boot` — boots a VM importing the `base` + `efi` + `pc` module
+- `base-x86-efi-pc-boot` — boots a VM importing the `base` + `x86-efi` + `pc` module
   groups (the same combination `p14s-personal` imports today), and asserts
   the system reaches `multi-user.target`, `sshd.service` comes up, and
   `systemctl is-system-running --wait` succeeds (no failed units, GNOME

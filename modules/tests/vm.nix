@@ -12,12 +12,12 @@
         '';
       };
 
-      checks.base-efi-pc-boot = pkgs.testers.runNixOSTest {
-        name = "base-efi-pc-boot";
+      checks.base-x86-efi-pc-boot = pkgs.testers.runNixOSTest {
+        name = "base-x86-efi-pc-boot";
         nodes.machine = {
           imports = [
             config.flake.modules.nixos.base
-            config.flake.modules.nixos.efi
+            config.flake.modules.nixos.x86-efi
             config.flake.modules.nixos.pc
           ];
           system.stateVersion = "25.11";

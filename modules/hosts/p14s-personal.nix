@@ -6,7 +6,7 @@
       {
         imports = [
           config.flake.modules.nixos.base
-          config.flake.modules.nixos.efi
+          config.flake.modules.nixos.x86-efi
           config.flake.modules.nixos.pc
           config.flake.modules.nixos.x86-microcode-amd
           (nixosArgs.modulesPath + "/installer/scan/not-detected.nix")

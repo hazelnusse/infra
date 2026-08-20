@@ -46,6 +46,10 @@ to the build.
 ## Caching
 
 CI caches the Nix store via `nix-community/cache-nix-action`, keyed on a
-hash of `flake.lock`. The cache is capped below GitHub's 10GB repo-wide
-limit and garbage-collected before each save; it naturally invalidates
-whenever `flake.lock` changes (e.g. a Dependabot update).
+hash of every `.nix` file plus `flake.lock`. The cache is capped below
+GitHub's 10GB repo-wide limit and garbage-collected before each save; a
+new cache is only saved when that hash actually changes, so a re-run or
+a docs-only commit reuses the existing cache exactly rather than saving
+a redundant duplicate. GitHub Actions caches are immutable once saved
+under a given key — restores fall back to the most recently created
+cache with a matching `nix-<os>-` prefix when there's no exact hit.

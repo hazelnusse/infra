@@ -38,27 +38,26 @@
             config.packages.git
             config.packages.starship
             config.packages.tmux
-            clang
-            claude-code
-            claude-monitor
             eza
             fd
-            gh
-            gnumake
             htop
             ripgrep
             tree
             unzip
             usbutils
-            wget
           ];
           pc = with pkgs; [
             config.packages.nixvim
             alacritty
             bitwarden-desktop
             canon-cups-ufr2
+            clang
+            claude-code
+            claude-monitor
             firefox
+            gh
             gnome-tweaks
+            gnumake
             google-chrome
             ledger-live-desktop
             nerd-fonts.jetbrains-mono
@@ -66,6 +65,7 @@
             noto-fonts-monochrome-emoji
             pinta
             telegram-desktop
+            wget
             xclip
           ];
         };

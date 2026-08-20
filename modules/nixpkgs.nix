@@ -16,9 +16,6 @@
     );
   };
   config = {
-    flake.modules.nixos.base = nixosArgs: {
-      home-manager.useGlobalPkgs = true;
-    };
     perSystem = { system, ... }: {
       imports = [ "${inputs.nixpkgs}/nixos/modules/misc/nixpkgs.nix" ];
       nixpkgs.hostPlatform = { inherit system; };

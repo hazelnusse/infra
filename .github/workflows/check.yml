@@ -14,7 +14,12 @@ jobs:
           extra-conf: accept-flake-config = true
       - uses: nix-community/cache-nix-action@v7
         with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/flake.lock') }}
+          # Hash the whole tree (e.g. .github/**), not just *.nix/flake.lock,
+          # since .nix files can reference non-.nix content (facter.json,
+          # sops secrets files) whose changes must also bust the cache.
+          # hashFiles() matches dotfiles by default (@actions/glob's
+          # excludeHiddenFiles defaults to false) -- only .git is excluded.
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**', '!.git/**') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-
           gc-max-store-size-linux: 9G
       - run: nix flake check

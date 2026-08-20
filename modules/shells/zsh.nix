@@ -1,8 +1,11 @@
+{ withSystem, ... }:
 {
   flake.modules.nixos.base =
-    nixosArgs@{ pkgs, ... }:
+    { pkgs, ... }:
     {
       programs.zsh.enable = true;
-      users.users.luke.shell = pkgs.zsh;
+      users.users.luke.shell = withSystem pkgs.stdenv.hostPlatform.system (
+        psArgs: psArgs.config.packages.zsh
+      );
     };
 }

@@ -11,5 +11,6 @@ NixOS configuration, managed as a dendritic-pattern [flake-parts](https://flake.
 | Build and switch to the current config               | `sudo nixos-rebuild switch --flake=.`                                        |
 | Build without switching (verify a change)            | `nix build .#nixosConfigurations.p14s-personal.config.system.build.toplevel` |
 | Run the test suite locally                           | `nix flake check` — see `docs/testing.md`                                    |
+| Edit an encrypted secret                             | `sops edit secrets.yaml` — see `docs/secrets.md`                             |
 | Regenerate `flake.nix` after adding/editing an input | `nix run .#write-flake`                                                      |
 | Apply the `main` branch-protection ruleset           | `nix run .#apply-branch-ruleset`                                             |

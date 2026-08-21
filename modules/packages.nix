@@ -43,6 +43,8 @@
             fd
             htop
             ripgrep
+            sops
+            ssh-to-age
             tree
             unzip
             usbutils

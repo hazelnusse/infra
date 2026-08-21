@@ -25,3 +25,8 @@ jobs:
           restore-prefixes-first-match: nix-${{ runner.os }}-
           gc-max-store-size-linux: 9G
       - run: nix flake check
+      # Root everything nix flake check just built so the post-job garbage
+      # collection (below) doesn't sweep it before the cache is saved --
+      # nix flake check itself leaves no lasting GC root. See
+      # modules/save-from-gc.nix.
+      - run: nix build .#saveFromGC

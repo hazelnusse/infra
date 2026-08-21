@@ -38,15 +38,15 @@ These tests run dramatically faster with hardware-accelerated KVM than
 without it (seconds vs. minutes, via QEMU's TCG software fallback). On a
 Linux dev machine, confirm `/dev/kvm` exists and is accessible
 (`ls -l /dev/kvm`, and that your user is in the `kvm` group). CI gets this
-automatically via `DeterminateSystems/nix-installer-action`'s `kvm: true`
-default, which handles both the udev rule and the `system-features = kvm`
-nix.conf wiring needed for Nix's build sandbox to pass `/dev/kvm` through
-to the build.
+automatically via `cachix/install-nix-action`'s `enable_kvm: true` default
+(handles the udev rule) combined with `system-features = kvm` in
+`extra_nix_config` (tells Nix's build sandbox it's allowed to pass
+`/dev/kvm` through to the build).
 
 ## Caching
 
 CI caches the Nix store via `nix-community/cache-nix-action`, keyed on a
-hash of every `.nix` file plus `flake.lock`. The cache is capped below
+hash of the whole tree (except `.git`). The cache is capped below
 GitHub's 10GB repo-wide limit and garbage-collected before each save; a
 new cache is only saved when that hash actually changes, so a re-run or
 a docs-only commit reuses the existing cache exactly rather than saving

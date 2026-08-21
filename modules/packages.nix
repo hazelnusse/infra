@@ -38,6 +38,7 @@
             config.packages.git
             config.packages.starship
             config.packages.tmux
+            config.packages.zsh
             dmidecode
             eza
             fd

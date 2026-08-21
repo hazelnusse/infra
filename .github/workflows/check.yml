@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: cachix/install-nix-action@v31
         with:
-          extra-conf: accept-flake-config = true
+          extra_nix_config: |
+            accept-flake-config = true
+            system-features = nixos-test benchmark big-parallel kvm
       - uses: nix-community/cache-nix-action@v7
         with:
           # Hash the whole tree (e.g. .github/**), not just *.nix/flake.lock,

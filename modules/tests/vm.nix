@@ -20,7 +20,7 @@
             config.flake.modules.nixos.x86-efi
             config.flake.modules.nixos.pc
           ];
-          system.stateVersion = "25.11";
+          system.stateVersion = "26.05";
         };
         testScript = ''
           machine.wait_for_unit("multi-user.target")

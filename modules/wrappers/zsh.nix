@@ -23,6 +23,8 @@
         source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
         source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+        eval "$(starship init zsh)"
+
         # NixOS hosts rebuild the system; everywhere else (e.g. the Ubuntu
         # home profile) just upgrades the user's own Nix profile.
         update() {

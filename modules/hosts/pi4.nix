@@ -10,6 +10,14 @@
 
       networking.hostName = "pi4";
 
+      # Lets p14s-personal deploy here over SSH (see its
+      # boot.binfmt.emulatedSystems comment) without a password prompt --
+      # nixos-rebuild --target-host makes several non-interactive SSH
+      # connections during copy/activate.
+      users.users.root.openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpSgxY5Gz86uTV5LZRyBuTaI0VAaW66oEfYX8pyteCz luke@nixos"
+      ];
+
       system.stateVersion = "26.05";
 
       hardware.facter.reportPath = ./pi4-facter.json;

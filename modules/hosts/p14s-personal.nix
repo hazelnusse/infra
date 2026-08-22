@@ -14,6 +14,15 @@
 
         networking.hostName = "p14s-personal";
 
+        # Lets this host build aarch64-linux derivations (emulated via
+        # qemu-user) so pi4 can be deployed with
+        # `nixos-rebuild switch --flake .#pi4 --target-host root@<pi-ip>`
+        # from here instead of compiling natively on the Pi's own SD card
+        # -- native builds put enough sustained write load on the card to
+        # trigger a real MMC-subsystem kernel hang during the pi4 kernel
+        # build (see the plan doc's Phase 5 TODO, 2026-08-22).
+        boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
         # This value determines the NixOS release from which the default
         # settings for stateful data, like file locations and database versions
         # on your system were taken. It‘s perfectly fine and recommended to leave

@@ -53,6 +53,7 @@
           pc = with pkgs; [
             config.packages.nixvim
             alacritty
+            bazelisk
             bitwarden-desktop
             canon-cups-ufr2
             clang

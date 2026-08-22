@@ -50,6 +50,12 @@
         autoload -Uz compinit
         compinit
 
+        # The upstream script only declares "#compdef bazel", but the
+        # binary we actually install is bazelisk (see modules/packages.nix)
+        # -- bind its completion explicitly rather than relying on zsh's
+        # inconsistent automatic alias-completion resolution.
+        compdef _bazel bazelisk
+
         source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
         source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
         source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

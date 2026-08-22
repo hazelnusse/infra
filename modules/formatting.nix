@@ -15,11 +15,9 @@
       };
       settings = {
         on-unmatched = "fatal";
-        #global.excludes = [
-        #  "*.jpg"
-        #  "*.png"
-        #  "LICENSE"
-        #];
+        # nixos-facter's own output format -- not meant to be hand-formatted,
+        # and reflowing it on every regeneration would just be repo noise.
+        global.excludes = [ "*-facter.json" ];
       };
     };
     #pre-commit.settings.hooks.treefmt.enable = true;

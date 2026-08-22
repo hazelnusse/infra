@@ -31,6 +31,12 @@
         EDITOR = "nvim";
         BROWSER = "firefox";
         COLORTERM = "truecolor";
+        # The upstream completion script's dynamic completions (command
+        # list, flags, info keys) shell out to $BAZEL, defaulting to the
+        # literal name "bazel" -- we only install bazelisk, so without
+        # this override those invocations fail silently and produce no
+        # completions, even though compdef correctly binds the widget.
+        BAZEL = "bazelisk";
       };
 
       zshrc.content = ''

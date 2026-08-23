@@ -10,5 +10,16 @@
       sops.secrets.root-password-hash.neededForUsers = true;
 
       users.users.root.hashedPasswordFile = config.sops.secrets.root-password-hash.path;
+
+      # neededForUsers alone wasn't enough (still confirmed live): under the
+      # default mutableUsers = true, hashedPasswordFile only ever applies
+      # the *first* time an account is created -- and root always
+      # pre-exists, so it was never actually "created" from NixOS's point
+      # of view, meaning it would never take effect regardless of ordering.
+      # false makes it enforced on every activation instead. Safe here:
+      # this host has no other interactive users, and root already has
+      # both a password and an SSH key, satisfying the module's own
+      # lockout-prevention assertion.
+      users.mutableUsers = false;
     };
 }

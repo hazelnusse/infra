@@ -1,6 +1,6 @@
 { withSystem, config, ... }:
 {
-  flake.modules.nixos.base =
+  flake.modules.nixos.pc =
     { pkgs, ... }:
     let
       wrappedZsh = withSystem pkgs.stdenv.hostPlatform.system (psArgs: psArgs.config.packages.zsh);

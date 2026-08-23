@@ -4,6 +4,10 @@
       enable = true;
       openFirewallDNS = true;
       openFirewallWebserver = true;
+      settings.dns.upstreams = [
+        "1.1.1.1"
+        "9.9.9.9"
+      ];
       lists = [
         {
           url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";

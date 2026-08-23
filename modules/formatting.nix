@@ -17,7 +17,13 @@
         on-unmatched = "fatal";
         # nixos-facter's own output format -- not meant to be hand-formatted,
         # and reflowing it on every regeneration would just be repo noise.
-        global.excludes = [ "*-facter.json" ];
+        # secrets/*.yaml similarly: sops's own indentation style differs
+        # from prettier's, so without this every `sops edit` would show a
+        # spurious reformatting diff alongside the real content change.
+        global.excludes = [
+          "*-facter.json"
+          "secrets/*.yaml"
+        ];
       };
     };
     #pre-commit.settings.hooks.treefmt.enable = true;

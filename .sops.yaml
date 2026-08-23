@@ -1,0 +1,9 @@
+keys:
+  - &luke age1qc8w75ljva8v0rsre6ytkej8vy3esftpttn8vy502queseky45lsr6e5pz
+  - &pi4 age1fllrns2hnh3nk28ckrsn39ra8nne8fax7yrya0ghr6xwu3hveyyqcczqux
+creation_rules:
+  - path_regex: secrets/pi4\.yaml$
+    key_groups:
+      - age:
+          - *luke
+          - *pi4

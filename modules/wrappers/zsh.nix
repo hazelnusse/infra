@@ -25,6 +25,12 @@
       zshAliases = {
         t = "tree";
         v = "nvim";
+        # xclip defaults to the PRIMARY X11 selection (populated just by
+        # highlighting text), not CLIPBOARD (populated by an explicit
+        # copy action, e.g. Ctrl+C) -- this makes plain `xclip` match
+        # what most apps' copy/paste actually mean. `\xclip` still gives
+        # the raw default if ever needed.
+        xclip = "xclip -selection clipboard";
       };
 
       env = {

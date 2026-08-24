@@ -6,6 +6,7 @@
         enable = true;
         openFirewallDNS = true;
         openFirewallWebserver = true;
+        settings.dns.queryLogging = false;
         settings.dns.upstreams = [
           "9.9.9.9" # Quad9
           "1.1.1.1" # Cloudflare

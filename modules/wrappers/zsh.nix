@@ -1,6 +1,6 @@
-{
-  flake.wrappers.zsh =
-    { wlib, pkgs, ... }:
+let
+  common =
+    { pkgs, lib, ... }:
     let
       # Pinned directly from bazel's own source rather than depending on
       # pkgs.bazel: we use bazelisk instead (see modules/packages.nix and
@@ -20,8 +20,6 @@
       '';
     in
     {
-      imports = [ wlib.wrapperModules.zsh ];
-
       zshAliases = {
         t = "tree";
         v = "nvim";
@@ -35,7 +33,7 @@
 
       env = {
         EDITOR = "nvim";
-        BROWSER = "firefox";
+        BROWSER = lib.mkDefault "firefox";
         COLORTERM = "truecolor";
         # The upstream completion script's dynamic completions (command
         # list, flags, info keys) shell out to $BAZEL, defaulting to the
@@ -84,5 +82,25 @@
           fi
         }
       '';
+    };
+in
+{
+  flake.wrappers.zsh =
+    { wlib, ... }:
+    {
+      imports = [
+        wlib.wrapperModules.zsh
+        common
+      ];
+    };
+
+  flake.wrappers.zsh-work =
+    { wlib, ... }:
+    {
+      imports = [
+        wlib.wrapperModules.zsh
+        common
+      ];
+      env.BROWSER = "google-chrome";
     };
 }

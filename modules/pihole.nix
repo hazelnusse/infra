@@ -7,6 +7,7 @@
         openFirewallDNS = true;
         openFirewallWebserver = true;
         settings.dns.upstreams = [
+          "9.9.9.9" # Quad9
           "1.1.1.1" # Cloudflare
           "8.8.8.8" # Google
           "1.0.0.1" # Cloudflare (secondary)

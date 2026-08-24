@@ -1,10 +1,17 @@
 {
   perSystem =
-    { config, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     {
       packages.homeProfile = pkgs.buildEnv {
         name = "home-profile";
-        paths = config.packageSets.base ++ config.packageSets.pc;
+        paths = (lib.remove config.packages.zsh (config.packageSets.base ++ config.packageSets.pc)) ++ [
+          config.packages.zsh-work
+        ];
       };
     };
 }

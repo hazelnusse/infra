@@ -7,8 +7,10 @@
         openFirewallDNS = true;
         openFirewallWebserver = true;
         settings.dns.upstreams = [
-          "1.1.1.1"
-          "9.9.9.9"
+          "9.9.9.9" # Quad9
+          "1.1.1.1" # Cloudflare
+          "8.8.8.8" # Google
+          "1.0.0.1" # Cloudflare (secondary)
         ];
         # Upstream defaults this to true "to prevent config changes via
         # API or CLI" -- a deliberate, application-level guard rail,

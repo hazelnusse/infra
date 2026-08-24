@@ -29,6 +29,21 @@ let
         # what most apps' copy/paste actually mean. `\xclip` still gives
         # the raw default if ever needed.
         xclip = "xclip -selection clipboard";
+
+        ls = "eza --icons --group-directories-first";
+        l = "eza -lh --icons --group-directories-first";
+        la = "eza -la --icons --group-directories-first";
+        lt = "eza --tree --level=2 --icons --group-directories-first";
+        lg = "eza -l --git --icons --group-directories-first";
+        ld = "eza --only-dirs --icons";
+        lf = "eza --only-files --icons";
+        lr = "eza --recurse --all --icons";
+        lS = "eza --oneline --icons";
+        lx = "eza -la --group-directories-first --extended --icons";
+        lh = "eza --hyperlink --all --icons";
+        lsize = "eza -l --sort=size --icons";
+        lmod = "eza -l --sort=modified --icons";
+        lignore = "eza --git-ignore --icons";
       };
 
       env = {

@@ -96,3 +96,53 @@ Mono` specifically — that's the monospace-flagged variant GUI font
    gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE_UUID/ use-system-font false
    gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE_UUID/ font 'JetBrainsMono Nerd Font Mono 12'
    ```
+
+## Fixing google-chrome's sandbox on Ubuntu 24.04+
+
+`google-chrome` aborts on launch with `FATAL:
+sandbox/linux/suid/client/setuid_sandbox_host.cc` — its setuid-root sandbox
+helper can't work from an immutable, non-root-owned Nix store path, and its
+fallback (Linux's unprivileged user namespaces) is blocked by an AppArmor
+restriction Ubuntu enables by default from 24.04 onward. Ubuntu ships an
+AppArmor exemption for Chrome, but only for the standard `.deb` install
+path (`/opt/google/chrome/chrome`) — the Nix-installed binary lives
+elsewhere, so that exemption doesn't apply.
+
+`CHROME_DEVEL_SANDBOX` (sometimes suggested online) does **not** fix this
+for the release `google-chrome` build — that variable is a Chromium
+developer-build mechanism only; the shipped binary ignores it, and its own
+wrapper script execs the real binary from a path inside the Nix store
+regardless (`.../share/google/chrome/google-chrome`).
+
+The actual fix: a custom AppArmor profile scoped to just this one binary
+path, mirroring what Ubuntu's own Chrome exemption does — narrower and
+safer than disabling the AppArmor restriction system-wide, and safer than
+`--no-sandbox` (which disables the sandbox entirely rather than just
+working around the namespace restriction). Uses a glob so it survives
+Chrome version updates without needing to be reissued each time (the Nix
+store hash and version both change on every update). Named
+`nix-google-chrome`, not `chrome`, deliberately — Ubuntu's own exemption
+at `/etc/apparmor.d/chrome` already uses the name `chrome` for its own
+(differently-attached) profile, and how the kernel/`apparmor_parser`
+handles two separately-loaded profiles sharing a name isn't confidently
+verifiable, so this just avoids the question by not colliding at all
+(the profile _name_ is only a label — it doesn't need to match the
+attachment path's basename to work):
+
+```
+sudo tee /etc/apparmor.d/nix-google-chrome <<'EOF'
+abi <abi/4.0>,
+include <tunables/global>
+
+profile nix-google-chrome /nix/store/*-google-chrome-*/share/google/chrome/google-chrome flags=(unconfined) {
+  userns,
+
+  include if exists <local/nix-google-chrome>
+}
+EOF
+sudo apparmor_parser -r /etc/apparmor.d/nix-google-chrome
+```
+
+No need to reapply after a `google-chrome` update — the glob matches any
+store hash/version — but if the _package name_ itself ever changes (e.g. a
+future rename in nixpkgs), the profile would need updating to match.

@@ -27,6 +27,10 @@ restoring the `.CFG` file.
 ## DHCP (`LAN → DHCP Server`)
 
 - Manually Assigned IP: `pi4` (MAC `DC:A6:32:21:6F:04`) → `192.168.50.234`
+- Manually Assigned IP: `p14s-personal` wifi (MAC `DC:56:7B:80:67:2D`) →
+  `192.168.50.239`
+- Manually Assigned IP: `p14s-personal` wired (MAC `18:3D:2D:86:66:76`) →
+  `192.168.50.13`
 - DNS Server 1: `192.168.50.234` (`pi4`)
 - "Advertise router's IP in addition to user-specified DNS": **No** —
   otherwise clients get both the router and `pi4` as resolvers and can

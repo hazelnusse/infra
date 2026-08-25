@@ -128,5 +128,13 @@ in
         common
       ];
       env.BROWSER = "google-chrome";
+
+      zshrc.content = ''
+        _wg0_bin() {
+          command -v wg-quick || echo "$(nix build nixpkgs#wireguard-tools^out --no-link --print-out-paths)/bin/wg-quick"
+        }
+        wg0up() { sudo "$(_wg0_bin)" up wg0; }
+        wg0down() { sudo "$(_wg0_bin)" down wg0; }
+      '';
     };
 }

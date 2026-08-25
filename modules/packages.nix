@@ -19,6 +19,11 @@
           default = [ ];
           description = "Additional packages installed on desktop/GUI hosts.";
         };
+        work = lib.mkOption {
+          type = lib.types.listOf lib.types.package;
+          default = [ ];
+          description = "Packages only installed on the Ubuntu work laptop's homeProfile.";
+        };
       };
     }
   );
@@ -38,7 +43,7 @@
             config.packages.git
             config.packages.starship
             config.packages.tmux
-            config.packages.zsh
+            curl
             dmidecode
             eza
             fd
@@ -52,6 +57,7 @@
           ];
           pc = with pkgs; [
             config.packages.nixvim
+            config.packages.zsh
             alacritty
             bazelisk
             bitwarden-desktop
@@ -72,6 +78,10 @@
             telegram-desktop
             wget
             xclip
+          ];
+          work = with pkgs; [
+            config.packages.zsh-work
+            azure-cli
           ];
         };
       };

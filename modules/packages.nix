@@ -82,6 +82,7 @@
           work = with pkgs; [
             config.packages.zsh-work
             azure-cli
+            wireguard-tools
           ];
         };
       };

@@ -32,6 +32,22 @@ restoring the `.CFG` file.
   otherwise clients get both the router and `pi4` as resolvers and can
   round-robin around Pi-hole
 
+## WireGuard remote access (`WAN → DDNS`, `WAN → Virtual Server / Port Forwarding`)
+
+The WireGuard _server_ runs on `pi4` (`modules/hosts/pi4-wireguard.nix`), not
+the router — the router only needs two settings to make it reachable from
+outside the LAN:
+
+- DDNS: ASUS's own free DDNS service, enabled under `WAN → DDNS`. Needed
+  because the home WAN IP isn't static; gives a stable hostname for
+  clients to connect to instead of a raw IP that can change.
+- Port forwarding: external UDP `51820` → `192.168.50.234:51820` (`pi4`'s
+  WireGuard port), under `WAN → Virtual Server / Port Forwarding`.
+
+No other router-side config is needed — `pi4` handles NAT for the VPN
+subnet itself (see `modules/hosts/pi4-wireguard.nix`), so no LAN routing
+table changes are required.
+
 ## DNS Director (`LAN → DNS Director`)
 
 - Enable DNS Director: **On**

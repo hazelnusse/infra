@@ -31,7 +31,8 @@ let
         xclip = "xclip -selection clipboard";
 
         ls = "eza --icons --group-directories-first";
-        l = "eza -lh --icons --group-directories-first";
+        l = "eza --icons --group-directories-first";
+        ll = "eza -lh --icons --group-directories-first";
         la = "eza -la --icons --group-directories-first";
         lt = "eza --tree --level=2 --icons --group-directories-first";
         lg = "eza -l --git --icons --group-directories-first";

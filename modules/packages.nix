@@ -43,7 +43,6 @@
             config.packages.git
             config.packages.starship
             config.packages.tmux
-            config.packages.zsh
             curl
             dmidecode
             eza
@@ -58,6 +57,7 @@
           ];
           pc = with pkgs; [
             config.packages.nixvim
+            config.packages.zsh
             alacritty
             bazelisk
             bitwarden-desktop
@@ -79,7 +79,10 @@
             wget
             xclip
           ];
-          work = with pkgs; [ azure-cli ];
+          work = with pkgs; [
+            config.packages.zsh-work
+            azure-cli
+          ];
         };
       };
 

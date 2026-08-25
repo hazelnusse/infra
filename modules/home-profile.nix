@@ -11,8 +11,7 @@
         name = "home-profile";
         paths =
           (lib.remove config.packages.zsh (config.packageSets.base ++ config.packageSets.pc))
-          ++ config.packageSets.work
-          ++ [ config.packages.zsh-work ];
+          ++ config.packageSets.work;
       };
     };
 }

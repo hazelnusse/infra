@@ -60,6 +60,16 @@ let
       };
 
       zshrc.content = ''
+        HISTFILE="$HOME/.zsh_history"
+        HISTSIZE=50000
+        SAVEHIST=50000
+        setopt APPEND_HISTORY
+        setopt SHARE_HISTORY
+        setopt EXTENDED_HISTORY
+        setopt HIST_IGNORE_ALL_DUPS
+        setopt HIST_IGNORE_SPACE
+        setopt HIST_REDUCE_BLANKS
+
         # Generic completion directories, scanned in addition to whatever's
         # baked into the wrapper below -- covers the NixOS system profile
         # and the non-NixOS `nix profile install` homeProfile, so any

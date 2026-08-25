@@ -19,6 +19,11 @@
           default = [ ];
           description = "Additional packages installed on desktop/GUI hosts.";
         };
+        work = lib.mkOption {
+          type = lib.types.listOf lib.types.package;
+          default = [ ];
+          description = "Packages only installed on the Ubuntu work laptop's homeProfile.";
+        };
       };
     }
   );
@@ -39,6 +44,7 @@
             config.packages.starship
             config.packages.tmux
             config.packages.zsh
+            curl
             dmidecode
             eza
             fd
@@ -73,6 +79,7 @@
             wget
             xclip
           ];
+          work = with pkgs; [ azure-cli ];
         };
       };
 

@@ -80,6 +80,7 @@
             xclip
           ];
           work = with pkgs; [
+            config.packages.alacritty-nixgl
             config.packages.zsh-work
             azure-cli
             wireguard-tools

@@ -57,6 +57,9 @@ let
         # this override those invocations fail silently and produce no
         # completions, even though compdef correctly binds the widget.
         BAZEL = "bazelisk";
+        # Cursor-shape escape codes render as visible garbage through
+        # tmux+alacritty; vi-mode keybindings are unaffected by this.
+        ZVM_CURSOR_STYLE_ENABLED = "false";
       };
 
       zshrc.content = ''

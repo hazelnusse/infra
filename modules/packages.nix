@@ -56,9 +56,9 @@
             usbutils
           ];
           pc = with pkgs; [
+            config.packages.alacritty
             config.packages.nixvim
             config.packages.zsh
-            alacritty
             bazelisk
             bitwarden-desktop
             canon-cups-ufr2

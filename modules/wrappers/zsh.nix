@@ -143,9 +143,13 @@ in
         # driver on their own -- see docs/non-nixos.md. nixGL lives in
         # its own profile, not homeProfile's, since its build is
         # inherently impure (inspects this machine's live GPU driver).
-        if [ -x "$HOME/.nix-profile-nixgl/bin/nixGL" ]; then
-          alacritty() { "$HOME/.nix-profile-nixgl/bin/nixGL" alacritty "$@"; }
-        fi
+        #
+        # The nixGL indirection itself lives in the `alacritty-nixgl`
+        # executable (modules/alacritty-nixgl.nix), since GNOME's
+        # Ctrl+Alt+T and .desktop launches need a real binary and can't
+        # see a shell function; this just makes plain `alacritty` reach
+        # the same launcher when typed interactively.
+        alacritty() { alacritty-nixgl "$@"; }
         update-nixgl() {
           nix profile upgrade --impure --profile "$HOME/.nix-profile-nixgl" '.*'
         }

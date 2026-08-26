@@ -167,10 +167,47 @@ flake outputs. It also goes in its own separate profile rather than
 `homeProfile`'s, so a plain `nix profile upgrade --all` — what `update`
 runs — never has to deal with an impure package mixed into an
 otherwise-reproducible profile.) This installs a `nixGL` binary that
-auto-detects the right driver; the `zsh-work` wrapper
-(`modules/wrappers/zsh.nix`) already defines an `alacritty` shell
-function that runs it through `nixGL` automatically — no need to type
-`nixGL alacritty` by hand.
+auto-detects the right driver; `alacritty-nixgl`
+(`modules/alacritty-nixgl.nix`, in `packageSets.work`) is a launcher
+that runs the wrapped alacritty through it, and the `zsh-work` wrapper
+(`modules/wrappers/zsh.nix`) redefines `alacritty` to reach that
+launcher — no need to type `nixGL alacritty` by hand.
 
 To upgrade nixGL itself later (separately from `update`, since it's in
 its own profile), run `update-nixgl` — also defined in `zsh-work`.
+
+## Making GNOME's Ctrl+Alt+T open alacritty
+
+**Not resolved by this repo**: dconf is per-user mutable state on a
+machine with no home-manager, so this is a one-time manual step.
+
+Ctrl+Alt+T is handled by `gsd-media-keys`, which spawns whatever
+`org.gnome.desktop.default-applications.terminal`'s `exec` key names
+(the keybinding itself lives in
+`org.gnome.settings-daemon.plugins.media-keys terminal` and needs no
+change). On Ubuntu that key defaults to `x-terminal-emulator`, the
+Debian alternatives symlink pointing at GNOME Terminal. Point it at the
+launcher instead:
+
+```
+gsettings set org.gnome.desktop.default-applications.terminal exec \
+  "$HOME/.nix-profile/bin/alacritty-nixgl"
+```
+
+Takes effect immediately — `gsd-media-keys` re-reads the key on every
+keypress, so no logout or session restart is needed. Revert with
+`gsettings reset org.gnome.desktop.default-applications.terminal exec`.
+
+Note this has to be an **executable**, not the `alacritty` shell
+function: `gsd-media-keys` spawns the process directly and never sources
+a zshrc. Same for launching from the app grid — `alacritty-nixgl` ships
+its own "Alacritty (nixGL)" desktop entry, separate from the wrapped
+alacritty's plain "Alacritty" one (which runs without nixGL and so still
+fails its GL init when started from the GNOME shell).
+
+An absolute path through `~/.nix-profile/bin` rather than the bare name,
+since a `$PATH` that happens to include the Nix profile isn't something
+a session service's environment can be relied on to have. This means the
+launcher must actually be installed before the key resolves: merge the
+change, then run `update` (`nix profile upgrade --all` — the profile is
+installed from `github:hazelnusse/infra`, not a local checkout).

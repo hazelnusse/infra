@@ -67,6 +67,15 @@ testing `9.9.9.9` and `8.8.8.8` directly from `pi4`, which resolved
 correctly with the client exception in place and failed identically
 without it.
 
+## `pihole status` false negative on `pi4`
+
+`pihole status` (and anything else in the CLI using `getFTLPID()`) always
+reports "DNS service is NOT running" on this host, even when it's healthy.
+It checks for a PID file at `/run/pihole-FTL.pid`, but NixOS runs FTL in
+`no-daemon` mode directly under systemd (`Type=simple`), which never writes
+one — systemd tracks the process itself. Trust `systemctl status
+pihole-ftl` / `ss -tulnp | grep :53` instead.
+
 ## Wireless (`Wireless → General`)
 
 Smart Connect: **Off** (separate SSIDs per band — `nami-2.4`, `nami-5.0`).

@@ -138,6 +138,17 @@ in
         }
         wg0up() { sudo "$(_wg0_bin)" up wg0; }
         wg0down() { sudo "$(_wg0_bin)" down wg0; }
+
+        # OpenGL apps built by Nix don't find this non-NixOS box's GPU
+        # driver on their own -- see docs/non-nixos.md. nixGL lives in
+        # its own profile, not homeProfile's, since its build is
+        # inherently impure (inspects this machine's live GPU driver).
+        if [ -x "$HOME/.nix-profile-nixgl/bin/nixGL" ]; then
+          alacritty() { "$HOME/.nix-profile-nixgl/bin/nixGL" alacritty "$@"; }
+        fi
+        update-nixgl() {
+          nix profile upgrade --impure --profile "$HOME/.nix-profile-nixgl" '.*'
+        }
       '';
     };
 }

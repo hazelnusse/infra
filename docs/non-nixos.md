@@ -146,3 +146,31 @@ sudo apparmor_parser -r /etc/apparmor.d/nix-google-chrome
 No need to reapply after a `google-chrome` update — the glob matches any
 store hash/version — but if the _package name_ itself ever changes (e.g. a
 future rename in nixpkgs), the profile would need updating to match.
+
+## Fixing alacritty's "failed to find suitable GL configuration"
+
+On a non-NixOS box, Nix's own bundled Mesa/GLVND doesn't correctly
+negotiate with the host's actual GPU driver — especially on a hybrid
+Intel+NVIDIA (Optimus-style) laptop, where the discrete NVIDIA driver
+is proprietary and lives outside the Nix store entirely. NixOS wires
+this up system-wide; a non-NixOS host needs
+[nixGL](https://github.com/nix-community/nixGL) to bridge Nix-built
+OpenGL apps to the host's real driver:
+
+```
+nix profile install --impure --profile ~/.nix-profile-nixgl github:nix-community/nixGL
+```
+
+(`--impure` is required — it inspects the live system's driver files
+at build time, so this can't be folded into this repo's otherwise-pure
+flake outputs. It also goes in its own separate profile rather than
+`homeProfile`'s, so a plain `nix profile upgrade --all` — what `update`
+runs — never has to deal with an impure package mixed into an
+otherwise-reproducible profile.) This installs a `nixGL` binary that
+auto-detects the right driver; the `zsh-work` wrapper
+(`modules/wrappers/zsh.nix`) already defines an `alacritty` shell
+function that runs it through `nixGL` automatically — no need to type
+`nixGL alacritty` by hand.
+
+To upgrade nixGL itself later (separately from `update`, since it's in
+its own profile), run `update-nixgl` — also defined in `zsh-work`.

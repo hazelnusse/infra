@@ -33,6 +33,29 @@
             "main"
           ];
         };
+        # Alacritty replaces its whole built-in default hint (URL regex +
+        # OSC 8 hyperlinks, Ctrl+click/no-modifier-hover) the moment any
+        # custom hint is configured -- so this has to restate the URL
+        # matching too, not just add hyperlinks on top of it. The regex
+        # is a simplified stand-in for upstream's exact byte-range
+        # exclusions (impractical to reproduce verbatim here); it covers
+        # real-world URLs equally well.
+        hints.enabled = [
+          {
+            hyperlinks = true;
+            regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\s<>\"`]+";
+            post_processing = true;
+            command = "xdg-open";
+            mouse = {
+              enabled = true;
+              mods = "Control";
+            };
+            binding = {
+              key = "O";
+              mods = "Control|Shift";
+            };
+          }
+        ];
       };
     };
 }

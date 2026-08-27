@@ -46,9 +46,15 @@
             regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\s<>\"`]+";
             post_processing = true;
             command = "xdg-open";
+            # Shift is required, not just Control: Alacritty hardcodes
+            # Shift as the only way to bypass a mouse-reporting-active
+            # program (tmux, via its own `mouse = true`) and handle a
+            # click/hover as a hint instead of forwarding it -- this
+            # isn't something `mods` alone can override, so it has to
+            # be part of the combo here to actually take effect.
             mouse = {
               enabled = true;
-              mods = "Control";
+              mods = "Control|Shift";
             };
             binding = {
               key = "O";

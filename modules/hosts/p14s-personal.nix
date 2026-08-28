@@ -9,6 +9,8 @@
           config.flake.modules.nixos.x86-efi
           config.flake.modules.nixos.pc
           config.flake.modules.nixos.x86-microcode-amd
+          config.flake.modules.nixos.x86-amd-pstate
+          config.flake.modules.nixos.laptop-power
           (modulesPath + "/installer/scan/not-detected.nix")
         ];
 

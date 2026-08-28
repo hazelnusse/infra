@@ -5,14 +5,16 @@
     {
       checks.pihole-dns = pkgs.testers.runNixOSTest {
         name = "pihole-dns";
-        nodes.machine = {
-          imports = [
-            config.flake.modules.nixos.base
-            config.flake.modules.nixos.pihole
-          ];
-          system.stateVersion = "26.05";
-          environment.systemPackages = [ pkgs.dig ];
-        };
+        nodes.machine =
+          { pkgs, ... }:
+          {
+            imports = [
+              config.flake.modules.nixos.base
+              config.flake.modules.nixos.pihole
+            ];
+            system.stateVersion = "26.05";
+            environment.systemPackages = [ pkgs.dig ];
+          };
         testScript = ''
           machine.wait_for_unit("multi-user.target")
           machine.wait_for_unit("pihole-ftl.service")

@@ -2,14 +2,14 @@
 {
   configurations.nixos.p14s-personal = {
     module =
-      nixosArgs@{ ... }:
+      { modulesPath, ... }:
       {
         imports = [
           config.flake.modules.nixos.base
           config.flake.modules.nixos.x86-efi
           config.flake.modules.nixos.pc
           config.flake.modules.nixos.x86-microcode-amd
-          (nixosArgs.modulesPath + "/installer/scan/not-detected.nix")
+          (modulesPath + "/installer/scan/not-detected.nix")
         ];
 
         networking.hostName = "p14s-personal";

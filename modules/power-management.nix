@@ -2,6 +2,14 @@
   flake.modules.nixos.laptop-power = {
     services.power-profiles-daemon.enable = false;
 
+    services.logind.settings.Login = {
+      HandleLidSwitch = "suspend-then-hibernate";
+      HandleLidSwitchExternalPower = "suspend-then-hibernate";
+      HandleLidSwitchDocked = "suspend-then-hibernate";
+    };
+
+    systemd.sleep.settings.Sleep.HibernateDelaySec = "30min";
+
     services.tlp = {
       enable = true;
       settings = {

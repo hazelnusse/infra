@@ -31,10 +31,19 @@
       setEnvironment.ZVM_CURSOR_STYLE_ENABLED = "false";
       plugins = [
         pkgs.tmuxPlugins.yank
-        pkgs.tmuxPlugins.resurrect
+        {
+          plugin = pkgs.tmuxPlugins.resurrect;
+          configBefore = ''
+            set -g @resurrect-capture-pane-contents 'on'
+            set -g @resurrect-processes '"~claude->claude --continue"'
+          '';
+        }
         {
           plugin = pkgs.tmuxPlugins.continuum;
-          configBefore = "set -g @continuum-restore 'on'";
+          configBefore = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-save-interval '1'
+          '';
         }
       ];
     };

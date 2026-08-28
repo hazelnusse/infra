@@ -9,6 +9,8 @@
           config.flake.modules.nixos.x86-efi
           config.flake.modules.nixos.pc
           config.flake.modules.nixos.x86-microcode-amd
+          config.flake.modules.nixos.x86-amd-pstate
+          config.flake.modules.nixos.laptop-power
           (modulesPath + "/installer/scan/not-detected.nix")
         ];
 
@@ -58,6 +60,24 @@
             "dmask=0077"
           ];
         };
+
+        # Sized above the 86GiB of RAM so a full-memory hibernation
+        # image always fits.
+        swapDevices = [
+          {
+            device = "/swapfile";
+            size = 98304; # 96 GiB
+          }
+        ];
+
+        boot.resumeDevice = "/dev/mapper/luks-250d5aab-75f6-4fa7-8621-e835482322ea";
+
+        # Physical offset of /swapfile's first block, from
+        # `filefrag -v /swapfile` -- required by the kernel to locate
+        # the hibernation image at boot, before any filesystem is
+        # mounted. Must be recomputed if the swapfile is ever deleted
+        # and recreated.
+        boot.kernelParams = [ "resume_offset=166262784" ];
       };
     system = "x86_64-linux";
   };

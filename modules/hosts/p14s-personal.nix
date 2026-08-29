@@ -78,6 +78,15 @@
         # mounted. Must be recomputed if the swapfile is ever deleted
         # and recreated.
         boot.kernelParams = [ "resume_offset=166262784" ];
+
+        # The sp5100_tco watchdog register block is present in this
+        # laptop's AMD FCH silicon (so the driver binds to it), but that
+        # functionality is only board-wired on IPMI-compliant
+        # server/workstation boards, not this consumer laptop. Its stop
+        # path doesn't work correctly here, hanging every reboot with
+        # "watchdog0: watchdog did not stop!" until the hardware watchdog
+        # itself eventually fires.
+        boot.blacklistedKernelModules = [ "sp5100_tco" ];
       };
     system = "x86_64-linux";
   };

@@ -61,6 +61,19 @@
               mods = "Control|Shift";
             };
           }
+          {
+            regex = "/[\\w./-]+";
+            post_processing = true;
+            command = "xdg-open";
+            mouse = {
+              enabled = true;
+              mods = "Control|Shift";
+            };
+            binding = {
+              key = "F";
+              mods = "Control|Shift";
+            };
+          }
         ];
       };
     };

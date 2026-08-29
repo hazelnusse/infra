@@ -39,7 +39,21 @@
           '';
         }
         {
-          plugin = pkgs.tmuxPlugins.continuum;
+          # continuum's auto-restore skips restoring whenever it sees any
+          # other process named "tmux" for this user (scripts/helpers.sh,
+          # another_tmux_server_running_on_startup) -- it's trying to avoid
+          # two real tmux environments clobbering each other's saves, but
+          # it can't distinguish that from an unrelated tmux server (e.g.
+          # Claude Code's own internal one) running elsewhere on the same
+          # machine, so restore silently never fires whenever one of those
+          # is alive. No upstream option disables this check, so it's
+          # patched out here.
+          plugin = pkgs.tmuxPlugins.continuum.overrideAttrs (old: {
+            postInstall = (old.postInstall or "") + ''
+              substituteInPlace $out/share/tmux-plugins/continuum/scripts/helpers.sh \
+                --replace '[ "$(number_tmux_processes_except_current_server)" -gt 1 ]' 'false'
+            '';
+          });
           configBefore = ''
             set -g @continuum-restore 'on'
             set -g @continuum-save-interval '1'

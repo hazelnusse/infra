@@ -10,7 +10,10 @@
       packages.homeProfile = pkgs.buildEnv {
         name = "home-profile";
         paths =
-          (lib.remove config.packages.zsh (config.packageSets.base ++ config.packageSets.pc))
+          (lib.subtractLists [
+            config.packages.zsh
+            config.packages.ssh
+          ] (config.packageSets.base ++ config.packageSets.pc))
           ++ config.packageSets.work;
       };
     };

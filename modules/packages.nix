@@ -41,6 +41,7 @@
         packageSets = {
           base = with pkgs; [
             config.packages.git
+            config.packages.ssh
             config.packages.starship
             config.packages.tmux
             curl

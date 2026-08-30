@@ -1,6 +1,12 @@
 {
   flake.wrappers.ssh =
-    { config, lib, wlib, pkgs, ... }:
+    {
+      config,
+      lib,
+      wlib,
+      pkgs,
+      ...
+    }:
     {
       imports = [ wlib.modules.default ];
       options.hosts = lib.mkOption {
@@ -27,7 +33,7 @@
               ''
                 Host ${name}
                   HostName ${h.hostname}
-                ''
+              ''
               + lib.optionalString (h.user != null) "  User ${h.user}\n"
             ) config.hosts
           );

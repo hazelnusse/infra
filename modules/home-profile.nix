@@ -13,6 +13,7 @@
           (lib.subtractLists [
             config.packages.zsh
             config.packages.ssh
+            config.packages.alacritty
           ] (config.packageSets.base ++ config.packageSets.pc))
           ++ config.packageSets.work;
       };

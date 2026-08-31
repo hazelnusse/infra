@@ -14,7 +14,7 @@
 
       networking.hostName = "nuc";
 
-      system.stateVersion = "25.05";
+      system.stateVersion = "26.05";
 
       hardware.facter.reportPath = ./nuc-facter.json;
 

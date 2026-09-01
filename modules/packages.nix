@@ -84,6 +84,7 @@
             config.packages.alacritty-nixgl
             config.packages.zsh-work
             azure-cli
+            jira-cli-go
             wireguard-tools
           ];
         };

@@ -14,6 +14,12 @@
 
       networking.hostName = "nuc";
 
+      # wlp58s0 (Intel AC 8265) is the only connection this host uses --
+      # eno1 has no cable plugged in -- so this is the only path a wake
+      # packet has. Confirmed via `iw list` that the firmware advertises
+      # magic-packet WoWLAN support before adding this.
+      networking.networkmanager.connectionConfig."wifi.wake-on-wlan" = "magic";
+
       system.stateVersion = "26.05";
 
       hardware.facter.reportPath = ./nuc-facter.json;

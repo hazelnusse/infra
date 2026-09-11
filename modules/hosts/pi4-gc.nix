@@ -6,8 +6,6 @@
 
     boot.loader.generic-extlinux-compatible.configurationLimit = 5;
 
-    services.journald.extraConfig = ''
-      SystemMaxUse=200M
-    '';
+    services.journald.settings.Journal.SystemMaxUse = "200M";
   };
 }

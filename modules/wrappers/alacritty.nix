@@ -6,6 +6,23 @@
         url = "https://raw.githubusercontent.com/catppuccin/alacritty/f6cb5a5c2b404cdaceaff193b9c52317f62c62f7/catppuccin-mocha.toml";
         hash = "sha256-lJzvF8PsUEILgscLIuOqLqCl0n38wTKEGSvVKEtdssU=";
       };
+      # Alacritty appends the matched hint text as this script's sole
+      # argument. Targets the "main" tmux session by name (matching
+      # terminal.shell below) rather than relying on $TMUX, since this
+      # runs as a child of alacritty itself, not of the shell in the pane.
+      openInNvimPane = pkgs.writeShellScript "alacritty-open-nvim-pane" ''
+        set -euo pipefail
+        file=$1
+        mime=$(${pkgs.file}/bin/file --mime-type -b -- "$file")
+        case "$mime" in
+          text/*|application/json|application/xml|application/x-yaml|application/x-shellscript|inode/x-empty)
+            tmux display-popup -t main -E -w 90% -h 90% "nvim -- $(printf '%q' "$file")"
+            ;;
+          *)
+            exec xdg-open "$file"
+            ;;
+        esac
+      '';
     in
     {
       imports = [ wlib.wrapperModules.alacritty ];
@@ -64,7 +81,7 @@
           {
             regex = "/[\\w./-]+";
             post_processing = true;
-            command = "xdg-open";
+            command = "${openInNvimPane}";
             mouse = {
               enabled = true;
               mods = "Control|Shift";

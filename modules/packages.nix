@@ -35,6 +35,10 @@
         nixpkgs.config.allowUnfreePackages = [
           "canon-cups-ufr2"
           "claude-code"
+          # Only reached via p14s-personal's own systemPackages, not
+          # packageSets.pc -- see the comment there. Still needed here
+          # because every nixosConfiguration reuses this perSystem `pkgs`
+          # (modules/nixpkgs.nix), rather than instantiating its own.
           "google-chrome"
         ];
 
@@ -70,7 +74,6 @@
             gh
             gnome-tweaks
             gnumake
-            google-chrome
             ledger-live-desktop
             nerd-fonts.jetbrains-mono
             noto-fonts-color-emoji

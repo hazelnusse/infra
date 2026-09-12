@@ -29,8 +29,22 @@
       # set here, not in the zsh wrapper's env -- tmux panes don't
       # inherit that, only tmux's own environment table.
       setEnvironment.ZVM_CURSOR_STYLE_ENABLED = "false";
+      # Deliberately no tmuxPlugins.yank. It rebinds copy-mode's `y` to
+      # `copy-pipe-and-cancel "xclip -selection clipboard"` (and
+      # MouseDragEnd1Pane to the same with `-selection primary`), which
+      # (a) silently overrides the `y` binding `vimVisualKeys` above
+      # already sets up, and (b) makes every single copy write the X11
+      # selection twice from two unrelated clients -- once by the forked
+      # xclip, and once by alacritty itself, because `clipboard` in
+      # terminal-features above gives tmux the `Ms` capability and
+      # set-clipboard (`external` by default) then also emits OSC 52.
+      # Both writers race on XSetSelectionOwner, and when xclip wins the
+      # gap between alacritty's set and its read-back verification,
+      # alacritty logs "Unable to store text in clipboard: Failed to set
+      # new owner of XCB selection". Letting tmux's own OSC 52 path be
+      # the single writer also means copying works unchanged over SSH,
+      # with no X11 helper binary in the loop at all.
       plugins = [
-        pkgs.tmuxPlugins.yank
         {
           plugin = pkgs.tmuxPlugins.resurrect;
           configBefore = ''

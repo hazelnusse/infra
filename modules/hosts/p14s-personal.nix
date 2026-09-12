@@ -2,7 +2,7 @@
 {
   configurations.nixos.p14s-personal = {
     module =
-      { modulesPath, ... }:
+      { modulesPath, pkgs, ... }:
       {
         imports = [
           config.flake.modules.nixos.base
@@ -15,6 +15,14 @@
         ];
 
         networking.hostName = "p14s-personal";
+
+        # Host-local rather than in packageSets.pc, because `pc` also feeds
+        # the work laptop's homeProfile -- and there a Nix-installed Chrome
+        # must not shadow the Puppet-provisioned /usr/bin/google-chrome,
+        # which is the only build the corporate endpoint security checks
+        # recognise (see docs/non-nixos.md). This host has no such
+        # constraint, so it keeps getting Chrome from nixpkgs.
+        environment.systemPackages = [ pkgs.google-chrome ];
 
         # Lets this host build aarch64-linux derivations (emulated via
         # qemu-user) so pi4 can be deployed with

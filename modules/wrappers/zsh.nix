@@ -110,6 +110,12 @@ let
             nix profile upgrade --all
           fi
         }
+
+        # Thin wrapper around the deploy-pi4 package (modules/hosts/pi4-deploy.nix),
+        # which builds pi4's system from this repo and deploys it over SSH.
+        deploy-pi4() {
+          nix run "$HOME/repos/infra#deploy-pi4" -- "$@"
+        }
       '';
     };
 in

@@ -95,6 +95,17 @@
         # "watchdog0: watchdog did not stop!" until the hardware watchdog
         # itself eventually fires.
         boot.blacklistedKernelModules = [ "sp5100_tco" ];
+
+        # Backport for https://gitlab.freedesktop.org/drm/amd/-/issues/5387
+        # (amdgpu/TTM resource-manager corruption on this host's Phoenix
+        # APU). Not yet in any released kernel or in nixpkgs' linux_7_2 --
+        # drop this once it lands there.
+        boot.kernelPatches = [
+          {
+            name = "ttm-fix-swapout-bulk-move-bookkeeping";
+            patch = ./patches/ttm-fix-swapout-bulk-move.patch;
+          }
+        ];
       };
     system = "x86_64-linux";
   };

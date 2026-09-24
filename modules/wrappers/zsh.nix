@@ -102,19 +102,32 @@ let
         eval "$(starship init zsh)"
 
         # NixOS hosts rebuild the system; everywhere else (e.g. the Ubuntu
-        # home profile) just upgrades the user's own Nix profile.
+        # home profile) just upgrades the user's own Nix profile. An
+        # optional argument builds straight from a GitHub ref (a branch,
+        # tag, or commit) instead of this checkout, so a PR can be tried
+        # before merging without touching this repo's working tree --
+        # `update` with no argument reverts to whatever's checked out here.
         update() {
+          local flake="$HOME/repos/infra"
+          if [ -n "''${1:-}" ]; then
+            flake="github:hazelnusse/infra/$1"
+          fi
           if [ -f /etc/NIXOS ]; then
-            sudo nixos-rebuild switch --flake="$HOME/repos/infra"
+            sudo nixos-rebuild switch --flake "$flake"
           else
             nix profile upgrade --all
           fi
         }
 
-        # Thin wrapper around the deploy-pi4 package (modules/hosts/pi4-deploy.nix),
-        # which builds pi4's system from this repo and deploys it over SSH.
+        # Thin wrappers around the deploy-pi4/deploy-nuc packages
+        # (modules/hosts/pi4-deploy.nix, modules/hosts/nuc-deploy.nix),
+        # which build a host's system from this repo (or, given a second
+        # argument, straight from a GitHub ref) and deploy it over SSH.
         deploy-pi4() {
           nix run "$HOME/repos/infra#deploy-pi4" -- "$@"
+        }
+        deploy-nuc() {
+          nix run "$HOME/repos/infra#deploy-nuc" -- "$@"
         }
       '';
     };

@@ -14,6 +14,11 @@
 
       networking.hostName = "nuc";
 
+      # nixos-facter would otherwise start dhcpcd on every detected
+      # interface alongside NetworkManager; two DHCP clients on one link
+      # give duplicate default routes and crash dhcpcd on link teardown.
+      hardware.facter.detected.dhcp.enable = false;
+
       system.stateVersion = "26.05";
 
       hardware.facter.reportPath = ./nuc-facter.json;

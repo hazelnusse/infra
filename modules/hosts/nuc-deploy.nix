@@ -7,7 +7,7 @@
       # second argument builds straight from a GitHub ref instead of this
       # checkout, so a PR can be tried on nuc without touching it. nuc's
       # SSH user isn't root (see modules/wrappers/ssh.nix), hence
-      # --use-remote-sudo.
+      # --elevate=sudo.
       packages.deploy-nuc = pkgs.writeShellApplication {
         name = "deploy-nuc";
         runtimeInputs = [ pkgs.nixos-rebuild ];
@@ -17,7 +17,7 @@
           if [ -n "''${2:-}" ]; then
             flake="github:hazelnusse/infra/$2"
           fi
-          nixos-rebuild switch --flake "$flake#nuc" --target-host "$target" --use-remote-sudo
+          nixos-rebuild switch --flake "$flake#nuc" --target-host "$target" --elevate=sudo
         '';
       };
     };

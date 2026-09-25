@@ -7,7 +7,10 @@
       # second argument builds straight from a GitHub ref instead of this
       # checkout, so a PR can be tried on nuc without touching it. nuc's
       # SSH user isn't root (see modules/wrappers/ssh.nix), hence
-      # --elevate=sudo.
+      # --elevate=sudo, and its sudo needs a password, hence
+      # --ask-elevate-password. --use-substitutes has nuc fetch missing
+      # paths from the binary cache itself instead of receiving them
+      # from this host over wifi, which is far slower.
       packages.deploy-nuc = pkgs.writeShellApplication {
         name = "deploy-nuc";
         runtimeInputs = [ pkgs.nixos-rebuild ];
@@ -17,7 +20,8 @@
           if [ -n "''${2:-}" ]; then
             flake="github:hazelnusse/infra/$2"
           fi
-          nixos-rebuild switch --flake "$flake#nuc" --target-host "$target" --elevate=sudo
+          nixos-rebuild switch --flake "$flake#nuc" --target-host "$target" \
+            --elevate=sudo --ask-elevate-password --use-substitutes
         '';
       };
     };

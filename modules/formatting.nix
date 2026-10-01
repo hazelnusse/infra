@@ -20,8 +20,10 @@
         # secrets/*.yaml similarly: sops's own indentation style differs
         # from prettier's, so without this every `sops edit` would show a
         # spurious reformatting diff alongside the real content change.
+        # *.ppd: CUPS-generated printer driver files, kept verbatim.
         global.excludes = [
           "*-facter.json"
+          "*.ppd"
           "secrets/*.yaml"
         ];
       };

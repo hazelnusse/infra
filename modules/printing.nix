@@ -4,6 +4,7 @@
     {
       services.printing = {
         enable = true;
+        startWhenNeeded = false;
         browsed.enable = false;
         drivers = [
           (pkgs.runCommand "canon-mf731c-ppd" { } ''

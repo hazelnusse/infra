@@ -19,6 +19,13 @@
       # give duplicate default routes and crash dhcpcd on link teardown.
       hardware.facter.detected.dhcp.enable = false;
 
+      # wlp58s0 is this host's only network path -- eno1 has no cable
+      # plugged in. Also requires "Native ACPI OS PCIe Support" enabled
+      # in BIOS (Power > Secondary Power Settings) -- off by default on
+      # this board, and without it the wifi card's ACPI wake GPE stays
+      # masked regardless of this setting.
+      networking.networkmanager.connectionConfig."wifi.wake-on-wlan" = "magic";
+
       system.stateVersion = "26.05";
 
       hardware.facter.reportPath = ./nuc-facter.json;

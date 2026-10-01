@@ -108,12 +108,14 @@ let
         # before merging without touching this repo's working tree --
         # `update` with no argument reverts to whatever's checked out here.
         update() {
-          local flake="$HOME/repos/infra"
-          if [ -n "''${1:-}" ]; then
-            flake="github:hazelnusse/infra/$1"
-          fi
           if [ -f /etc/NIXOS ]; then
+            local flake="$HOME/repos/infra"
+            if [ -n "''${1:-}" ]; then
+              flake="github:hazelnusse/infra/$1"
+            fi
             sudo nixos-rebuild switch --flake "$flake"
+          elif [ -n "''${1:-}" ]; then
+            nix profile install "github:hazelnusse/infra/$1#homeProfile"
           else
             nix profile upgrade --all
           fi

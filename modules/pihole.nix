@@ -1,9 +1,42 @@
 {
   flake.modules.nixos.pihole =
     { lib, pkgs, ... }:
+    let
+      # Upstream's own CMake build treats warnings as errors; GCC 16 flags
+      # sanitize_dns_hosts's loop-index `i` in src/config/validator.c as
+      # set-but-unused -- a genuine leftover from the refactor in
+      # pi-hole/FTL#2935 that rewrote the loop to walk item->next
+      # directly instead of indexing with cJSON_GetArrayItem(). Already
+      # fixed upstream in pi-hole/FTL#2939 (merged 2026-07-07, after the
+      # v6.7.1 tag this nixpkgs still pins) with the identical one-line
+      # removal this patch carries. Drop this once nixpkgs bumps past
+      # v6.7.1 to a release that includes it.
+      #
+      # pihole-ftl is also a build input of pkgs.pihole (the CLI, used by
+      # the ExecStartPost setup script for `pihole -g`) and of
+      # pkgs.pihole-web (which also directly depends on pkgs.pihole
+      # itself), independently of services.pihole-ftl.package -- all
+      # three need to build against this same patched derivation or one
+      # pulls in the un-patched pihole-ftl instead.
+      patchedFtl = pkgs.pihole-ftl.overrideAttrs (old: {
+        # The same comment/loop idiom this fixes was applied verbatim to
+        # several other functions by the same upstream refactor, and in
+        # those the index *is* still read in later snprintf calls -- a
+        # plain text/regex substitution risks deleting `i` from one of
+        # those too (confirmed: it did, on the first attempt here, and
+        # broke 4 other functions). A patch anchored to this exact
+        # function's surrounding lines doesn't have that problem.
+        patches = (old.patches or [ ]) ++ [
+          ./patches/pihole-ftl-sanitize-dns-hosts-unused-i.patch
+        ];
+      });
+      patchedPihole = pkgs.pihole.override { pihole-ftl = patchedFtl; };
+    in
     {
       services.pihole-ftl = {
         enable = true;
+        package = patchedFtl;
+        piholePackage = patchedPihole;
         openFirewallDNS = true;
         openFirewallWebserver = true;
         settings.dns.queryLogging = false;
@@ -31,6 +64,10 @@
 
       services.pihole-web = {
         enable = true;
+        package = pkgs.pihole-web.override {
+          pihole-ftl = patchedFtl;
+          pihole = patchedPihole;
+        };
         ports = [ 80 ];
       };
 

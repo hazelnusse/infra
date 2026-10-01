@@ -19,6 +19,10 @@
       # give duplicate default routes and crash dhcpcd on link teardown.
       hardware.facter.detected.dhcp.enable = false;
 
+      # wlp58s0 is this host's only network path -- eno1 has no cable
+      # plugged in.
+      networking.networkmanager.connectionConfig."wifi.wake-on-wlan" = "magic";
+
       system.stateVersion = "26.05";
 
       hardware.facter.reportPath = ./nuc-facter.json;

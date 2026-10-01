@@ -2,19 +2,33 @@
   flake.modules.nixos.pihole =
     { lib, pkgs, ... }:
     let
-      # Upstream's own CMake build treats warnings as errors; GCC 16
-      # flags an unused-but-set variable in src/config/validator.c that
-      # older compilers didn't catch. Disable just that warning rather
-      # than patching upstream source -- drop this once a pihole-ftl
-      # release fixes it. pihole-ftl is also a build input of pkgs.pihole
-      # (the CLI, used by the ExecStartPost setup script for `pihole -g`)
-      # and of pkgs.pihole-web (which also directly depends on pkgs.pihole
-      # itself), independently of services.pihole-ftl.package -- all three
-      # need the same override or one pulls in the un-patched build.
+      # Upstream's own CMake build treats warnings as errors; GCC 16 flags
+      # sanitize_dns_hosts's loop-index `i` in src/config/validator.c as
+      # set-but-unused. It really is dead: the comment right above it
+      # explains the loop was rewritten to walk item->next directly
+      # instead of indexing with cJSON_GetArrayItem(), and `i` was never
+      # removed. Delete it instead of disabling the warning class, which
+      # would also hide a genuinely new unused-variable bug elsewhere in
+      # this large C codebase. Drop this once a pihole-ftl release does
+      # the same: https://github.com/pi-hole/FTL/blob/v6.7.1/src/config/validator.c#L824
+      #
+      # pihole-ftl is also a build input of pkgs.pihole (the CLI, used by
+      # the ExecStartPost setup script for `pihole -g`) and of
+      # pkgs.pihole-web (which also directly depends on pkgs.pihole
+      # itself), independently of services.pihole-ftl.package -- all
+      # three need to build against this same patched derivation or one
+      # pulls in the un-patched pihole-ftl instead.
       patchedFtl = pkgs.pihole-ftl.overrideAttrs (old: {
-        env = (old.env or { }) // {
-          NIX_CFLAGS_COMPILE = "${old.env.NIX_CFLAGS_COMPILE or ""} -Wno-error=unused-but-set-variable";
-        };
+        # The same comment/loop idiom this fixes was applied verbatim to
+        # several other functions by the same upstream refactor, and in
+        # those the index *is* still read in later snprintf calls -- a
+        # plain text/regex substitution risks deleting `i` from one of
+        # those too (confirmed: it did, on the first attempt here, and
+        # broke 4 other functions). A patch anchored to this exact
+        # function's surrounding lines doesn't have that problem.
+        patches = (old.patches or [ ]) ++ [
+          ./patches/pihole-ftl-sanitize-dns-hosts-unused-i.patch
+        ];
       });
       patchedPihole = pkgs.pihole.override { pihole-ftl = patchedFtl; };
     in

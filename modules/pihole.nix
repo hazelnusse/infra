@@ -4,13 +4,13 @@
     let
       # Upstream's own CMake build treats warnings as errors; GCC 16 flags
       # sanitize_dns_hosts's loop-index `i` in src/config/validator.c as
-      # set-but-unused. It really is dead: the comment right above it
-      # explains the loop was rewritten to walk item->next directly
-      # instead of indexing with cJSON_GetArrayItem(), and `i` was never
-      # removed. Delete it instead of disabling the warning class, which
-      # would also hide a genuinely new unused-variable bug elsewhere in
-      # this large C codebase. Drop this once a pihole-ftl release does
-      # the same: https://github.com/pi-hole/FTL/blob/v6.7.1/src/config/validator.c#L824
+      # set-but-unused -- a genuine leftover from the refactor in
+      # pi-hole/FTL#2935 that rewrote the loop to walk item->next
+      # directly instead of indexing with cJSON_GetArrayItem(). Already
+      # fixed upstream in pi-hole/FTL#2939 (merged 2026-07-07, after the
+      # v6.7.1 tag this nixpkgs still pins) with the identical one-line
+      # removal this patch carries. Drop this once nixpkgs bumps past
+      # v6.7.1 to a release that includes it.
       #
       # pihole-ftl is also a build input of pkgs.pihole (the CLI, used by
       # the ExecStartPost setup script for `pihole -g`) and of

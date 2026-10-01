@@ -1,9 +1,28 @@
 {
   flake.modules.nixos.pihole =
     { lib, pkgs, ... }:
+    let
+      # Upstream's own CMake build treats warnings as errors; GCC 16
+      # flags an unused-but-set variable in src/config/validator.c that
+      # older compilers didn't catch. Disable just that warning rather
+      # than patching upstream source -- drop this once a pihole-ftl
+      # release fixes it. pihole-ftl is also a build input of pkgs.pihole
+      # (the CLI, used by the ExecStartPost setup script for `pihole -g`)
+      # and of pkgs.pihole-web (which also directly depends on pkgs.pihole
+      # itself), independently of services.pihole-ftl.package -- all three
+      # need the same override or one pulls in the un-patched build.
+      patchedFtl = pkgs.pihole-ftl.overrideAttrs (old: {
+        env = (old.env or { }) // {
+          NIX_CFLAGS_COMPILE = "${old.env.NIX_CFLAGS_COMPILE or ""} -Wno-error=unused-but-set-variable";
+        };
+      });
+      patchedPihole = pkgs.pihole.override { pihole-ftl = patchedFtl; };
+    in
     {
       services.pihole-ftl = {
         enable = true;
+        package = patchedFtl;
+        piholePackage = patchedPihole;
         openFirewallDNS = true;
         openFirewallWebserver = true;
         settings.dns.queryLogging = false;
@@ -31,6 +50,10 @@
 
       services.pihole-web = {
         enable = true;
+        package = pkgs.pihole-web.override {
+          pihole-ftl = patchedFtl;
+          pihole = patchedPihole;
+        };
         ports = [ 80 ];
       };
 

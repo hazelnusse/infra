@@ -33,7 +33,6 @@
       { config, pkgs, ... }:
       {
         nixpkgs.config.allowUnfreePackages = [
-          "canon-cups-ufr2"
           "claude-code"
           # Only reached via p14s-personal's own systemPackages, not
           # packageSets.pc -- see the comment there. Still needed here
@@ -66,7 +65,6 @@
             config.packages.zsh
             bazelisk
             bitwarden-desktop
-            canon-cups-ufr2
             clang
             claude-code
             claude-monitor

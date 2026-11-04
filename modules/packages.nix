@@ -32,7 +32,7 @@
     perSystem =
       { config, pkgs, ... }:
       let
-        # TODO: drop once NixOS/nixpkgs#582594 (fabric vs invoke 3) lands.
+        # TODO(#106): drop once nixpkgs fixes fabric with invoke 3.
         azure-cli-invoke2 =
           (pkgs.extend (
             final: prev: {

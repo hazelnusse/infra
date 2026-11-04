@@ -9,6 +9,8 @@
       # so a PR can be tried on pi4 without touching this checkout. The
       # build's out-link is a GC root, so this host's nix-gc doesn't throw
       # away the emulated build and force a full rebuild next deploy.
+      # --no-reexec because nixos-rebuild still re-execs with --store-path
+      # and, lacking --flake, looks itself up via <nixpkgs/nixos>.
       packages.deploy-pi4 = pkgs.writeShellApplication {
         name = "deploy-pi4";
         runtimeInputs = [ pkgs.nixos-rebuild ];
@@ -22,7 +24,8 @@
           mkdir -p "$(dirname "$gcroot")"
           nix build "$flake#nixosConfigurations.pi4.config.system.build.toplevel" \
             --out-link "$gcroot"
-          nixos-rebuild switch --store-path "$(readlink -f "$gcroot")" \
+          nixos-rebuild switch --no-reexec \
+            --store-path "$(readlink -f "$gcroot")" \
             --target-host "$target"
         '';
       };

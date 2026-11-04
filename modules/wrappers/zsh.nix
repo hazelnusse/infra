@@ -106,12 +106,15 @@ let
         # optional argument builds straight from a GitHub ref (a branch,
         # tag, or commit) instead of this checkout, so a PR can be tried
         # before merging without touching this repo's working tree --
-        # `update` with no argument reverts to whatever's checked out here.
+        # `update` with no argument reverts to whatever's checked out here,
+        # or to GitHub's main on hosts without a checkout.
         update() {
           if [ -f /etc/NIXOS ]; then
             local flake="$HOME/repos/infra"
             if [ -n "''${1:-}" ]; then
               flake="github:hazelnusse/infra/$1"
+            elif [ ! -f "$flake/flake.nix" ]; then
+              flake="github:hazelnusse/infra/main"
             fi
             sudo nixos-rebuild switch --flake "$flake"
           elif [ -n "''${1:-}" ]; then

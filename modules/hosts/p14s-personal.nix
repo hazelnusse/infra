@@ -2,7 +2,12 @@
 {
   configurations.nixos.p14s-personal = {
     module =
-      { modulesPath, pkgs, ... }:
+      nixosArgs@{
+        modulesPath,
+        pkgs,
+        lib,
+        ...
+      }:
       {
         imports = [
           config.flake.modules.nixos.base
@@ -95,6 +100,17 @@
         # "watchdog0: watchdog did not stop!" until the hardware watchdog
         # itself eventually fires.
         boot.blacklistedKernelModules = [ "sp5100_tco" ];
+
+        # mt7925e on kernels before 7.3.2 oopses in mt7925e_mac_reset
+        # (NULL napi_disable) when restoring from hibernation, hanging
+        # the system. Keep the driver unloaded across sleep until the
+        # fix (upstream c182bfe944eb) is in the running kernel.
+        powerManagement =
+          lib.mkIf (lib.versionOlder nixosArgs.config.boot.kernelPackages.kernel.version "7.3.2")
+            {
+              powerDownCommands = "${pkgs.kmod}/bin/modprobe -r mt7925e";
+              resumeCommands = "${pkgs.kmod}/bin/modprobe mt7925e";
+            };
       };
     system = "x86_64-linux";
   };

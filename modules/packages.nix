@@ -31,26 +31,6 @@
   config = {
     perSystem =
       { config, pkgs, ... }:
-      let
-        # TODO(#106): drop once nixpkgs fixes fabric with invoke 3.
-        azure-cli-invoke2 =
-          (pkgs.extend (
-            final: prev: {
-              pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-                (pyFinal: pyPrev: {
-                  invoke = pyPrev.invoke.overridePythonAttrs (old: {
-                    version = "2.2.1";
-                    src = pyFinal.fetchPypi {
-                      inherit (old) pname;
-                      version = "2.2.1";
-                      hash = "sha256-UVv0m0pIkyt5sCRZA0jaIvOcSULf+ZGtH7i4uuob5wc=";
-                    };
-                  });
-                })
-              ];
-            }
-          )).azure-cli;
-      in
       {
         nixpkgs.config.allowUnfreePackages = [
           "claude-code"
@@ -104,7 +84,7 @@
           work = with pkgs; [
             config.packages.alacritty-nixgl
             config.packages.zsh-work
-            azure-cli-invoke2
+            azure-cli
             jira-cli-go
             wireguard-tools
           ];
